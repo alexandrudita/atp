@@ -1,0 +1,11 @@
+5
+popescu daniel
+8 9.5 8.5 10 9
+ionescu mircea
+7 6.5 5.5 10 9
+Dragomir Ionela
+10 9 8.5 10 9
+Dudescu Petronela
+7 9 8 6 9
+Popa Marian
+7 6.5 4 4 9
