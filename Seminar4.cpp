@@ -1,7 +1,3 @@
-// Seminar4.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include "pch.h"
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -46,7 +42,6 @@ void scriere_angajati_fisier_bin_rel() {
 			int pozitie;
 			printf("\nIntroduceti pozitia: ");
 			scanf_s("%d", &pozitie);
-			//dimensiune fisier atat cu canditati 1 - prezenti cat si cu 0 - lipsa
 			int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
 			Candidat c;
 			if (pozitie > nr_candidati) {
@@ -59,8 +54,7 @@ void scriere_angajati_fisier_bin_rel() {
 					fwrite(&c, sizeof(c), 1, fisier);
 				}
 				//ne deplasam cu bitii din punctul de start al fisierului pana in pozitia dorita
-				fseek(fisier, (pozitie - 1) * sizeof(c),
-					SEEK_SET);
+				fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
 				c = citire_candidat_tastatura();
 				//scriere in fisier candidat
 				fwrite(&c, sizeof(c), 1, fisier);
@@ -68,8 +62,7 @@ void scriere_angajati_fisier_bin_rel() {
 			//pozitia se afla inainte de finalul fisierului
 			else {
 				//ne deplasam cu bitii din punctul de start al fisierului pana in pozitia dorita
-				fseek(fisier, (pozitie - 1) * sizeof(c),
-					SEEK_SET);
+				fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
 				//citim candidatul aflat pe aceasta pozitie in fisier
 				fread(&c, sizeof(c), 1, fisier);
 				//verificam daca exista deja un candidat. In cazul in care exista un candidat afisam mesaj de eroare 
@@ -116,17 +109,178 @@ void afisare_consola_candidati_fisier_bin_rel() {
 	}
 }
 
-float nota_maxima_candidati();
+float nota_maxima_candidati() {
+	float maxim = 0.0;
+	FILE* fisier;
+	fopen_s(&fisier, "candidati.dat", "rb+");
+	if (fisier != NULL) {
+		Candidat c;
+		//citim cati candidati avem in fisier. ATENTIE aceasta variabila nu specifica daca toti candidatii sunt valizi. Putem avea variabile de tip Candidat cu codul -1 pe care-l consideram invalid conform metodei de scriere in fisier
+		int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
+		for (int i = 0; i < nr_candidati; i++)
+		{
+			fread(&c, sizeof(c), 1, fisier);
+			if (c.is == 1 && maxim<c.nota) {
+				maxim = c.nota;
+			}
+		}
+		//inchidere fisier
+		fclose(fisier);
+	}
+	else {
+		printf("\nFisierul nu se poate deschide\n");
+	}
+	return maxim;
+}
 
-float nota_minima_candidati();
+float nota_minima_candidati() {
+	float minim = 0.0;
+	FILE* fisier;
+	fopen_s(&fisier, "candidati.dat", "rb+");
+	if (fisier != NULL) {
+		Candidat c;
+		//citim cati candidati avem in fisier. ATENTIE aceasta variabila nu specifica daca toti candidatii sunt valizi. Putem avea variabile de tip Candidat cu codul -1 pe care-l consideram invalid conform metodei de scriere in fisier
+		int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
+		for (int i = 0; i < nr_candidati; i++)
+		{
+			fread(&c, sizeof(c), 1, fisier);
+			if (c.is == 1 && minim > c.nota) {
+				minim = c.nota;
+			}
+		}
+		//inchidere fisier
+		fclose(fisier);
+	}
+	else {
+		printf("\nFisierul nu se poate deschide\n");
+	}
+	return minim;
+}
 
-float medie_candidati();
+float medie_candidati() {
+	float suma = 0.0;
+	int nr_candidati_valizi = 0;
+	FILE* fisier;
+	fopen_s(&fisier, "candidati.dat", "rb+");
+	if (fisier != NULL) {
+		Candidat c;
+		//citim cati candidati avem in fisier. ATENTIE aceasta variabila nu specifica daca toti candidatii sunt valizi. Putem avea variabile de tip Candidat cu codul -1 pe care-l consideram invalid conform metodei de scriere in fisier
+		int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
+		for (int i = 0; i < nr_candidati; i++)
+		{
+			fread(&c, sizeof(c), 1, fisier);
+			if (c.is != 0) {
+				suma += c.nota;
+				nr_candidati_valizi++;
+			}
+		}
+		//inchidere fisier
+		fclose(fisier);
+	}
+	else {
+		printf("\nFisierul nu se poate deschide\n");
+	}
+	if (nr_candidati_valizi > 0) {
+		return suma / nr_candidati_valizi;
+	}
+	else {
+		return 0;
+	}
+}
 
-void afisare_candidat_pozitie();
+void afisare_candidat_pozitie() {
+	FILE* fisier;
+	fopen_s(&fisier, "candidati.dat", "rb");
+	if (fisier != NULL){
+		Candidat c;
+		int pozitie;
+		printf("\nIntroduceti pozitia dorita: ");
+		scanf_s("%d", &pozitie);
+		int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
+		if (pozitie >= nr_candidati) {
+			printf("\nNu exista element pe pozitia %d", pozitie);
+		}
+		else {
+			fseek(fisier, (pozitie - 1)*sizeof(c), SEEK_SET);
+			fread(&c, sizeof(c), 1, fisier);
+			if (c.is != 0) {
+				printf("\nNume: %s, Nota %2.2f", c.nume, c.nota);
+			}
+			else {
+				printf("\nNu exista element pe pozitia %d", pozitie);
+			}
+		}
+		fclose(fisier);
+	}
+	else {
+		printf("\nFisierul nu se poate deschide");
+	}
+}
 
-void modifica_candidat_pozitie();
+void modifica_candidat_pozitie() {
+	FILE* fisier;
+	fopen_s(&fisier, "candidati.dat", "rb+");
+	if (fisier != NULL) {
+		Candidat c;
+		int pozitie;
+		printf("\nIntroduceti pozitia dorita: ");
+		scanf_s("%d", &pozitie);
+		int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
+		if (pozitie >= nr_candidati) {
+			printf("\nNu exista element pe pozitia %d", pozitie);
+		}
+		else {
+			fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
+			fread(&c, sizeof(c), 1, fisier);
+			if (c.is != 0) {
+				c = citire_candidat_tastatura();
+				//repozitionare din punctul in care dorim sa scriem. Daca nu facem acest lucru, modificam candidatul de pe pozitia urmatoare, deoarece prin apelul fread am deplasat cursorul in fisier cu un candidat
+				fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
+				fwrite(&c, sizeof(c), 1, fisier);
+			}
+			else {
+				printf("\nNu exista element pe pozitia %d", pozitie);
+			}
+		}
+		fclose(fisier);
+	}
+	else {
+		printf("\nFisierul nu se poate deschide");
+	}
+}
 
-void stergere_candidat_pozitie();
+void stergere_candidat_pozitie() {
+	FILE* fisier;
+	fopen_s(&fisier, "candidati.dat", "rb+");
+	if (fisier != NULL) {
+		Candidat c;
+		int pozitie;
+		printf("\nIntroduceti pozitia dorita: ");
+		scanf_s("%d", &pozitie);
+		int nr_candidati = nr_elemente_fis_binar(fisier, sizeof(Candidat));
+		if (pozitie >= nr_candidati) {
+			printf("\nNu exista element pe pozitia %d", pozitie);
+		}
+		else {
+			fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
+			fread(&c, sizeof(c), 1, fisier);
+			if (c.is != 0) {
+				c.is = 0;
+				//repozitionare din punctul in care dorim sa scriem. Daca nu facem acest lucru, modificam candidatul de pe pozitia urmatoare, deoarece prin apelul fread am deplasat cursorul in fisier cu un candidat
+				fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
+				fwrite(&c, sizeof(c), 1, fisier);
+			}
+			else {
+				printf("\nNu exista element pe pozitia %d", pozitie);
+			}
+		}
+		fclose(fisier);
+	}
+	else {
+		printf("\nFisierul nu se poate deschide");
+	}
+}
+
 void main() {
 	scriere_angajati_fisier_bin_rel();
 	afisare_consola_candidati_fisier_bin_rel();
