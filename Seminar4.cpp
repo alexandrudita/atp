@@ -32,7 +32,7 @@ int nr_elemente_fis_binar(FILE* fisier,
 	return n;
 }
 
-void scriere_angajati_fisier_bin_rel() {
+void scriere_candidati_fisier_bin_rel() {
 	FILE* fisier;
 	fopen_s(&fisier, "candidati.dat", "wb+");
 	if (fisier!=NULL) { 
@@ -70,6 +70,8 @@ void scriere_angajati_fisier_bin_rel() {
 					printf("\nNu putem adauga un candidat nou pe pozitia %d deoarece este ocupata de candidatul %s\n", pozitie, c.nume);
 				}
 				else {
+					//repozitionare in fisier ca sa suprascriem elementul dummy 
+					fseek(fisier, (pozitie - 1) * sizeof(c), SEEK_SET);
 					//adaugam un nou candidat
 					c = citire_candidat_tastatura();
 					fwrite(&c, sizeof(c), 1, fisier);
@@ -282,7 +284,7 @@ void stergere_candidat_pozitie() {
 }
 
 void main() {
-	scriere_angajati_fisier_bin_rel();
+	scriere_candidati_fisier_bin_rel();
 	afisare_consola_candidati_fisier_bin_rel();
 	printf("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++");
 	float minim = nota_minima_candidati();
