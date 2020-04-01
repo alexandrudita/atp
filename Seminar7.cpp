@@ -51,7 +51,9 @@ void interclasare(float* &vector, int index_s, int index_mij, int index_f)
 	float* temp;
 	//calculez dimensiunea vectorului
 	int dim = (index_f - index_s) + 1;
-	i = index_s; j = index_mij + 1; k = 0;
+	i = index_s;
+	j = index_mij + 1; 
+	k = 0;//contor pentru elementele din temp
 	//definesc vector temp in care sa sortez elementele
 	temp = (float*)malloc(sizeof(float)*dim);
 	//parcurg cele 2 jum ale vector si compar elementele
@@ -102,7 +104,7 @@ void interclasare(float* &vector, int index_s, int index_mij, int index_f)
 		temp[i] = vector[i];
 	}
 	//algoritmul de sortare.
-	//se aplica dublu vor pentru a compara elementele din vector
+	//se aplica dublu for pentru a compara elementele din vector
 	for (i = 0; i < dim - 1; i++) {
 		for (j = i + 1; j < dim; j++) {
 			//verificam daca exista un element dupa pozitia i care este mai mic decat cel din i
@@ -117,6 +119,13 @@ void interclasare(float* &vector, int index_s, int index_mij, int index_f)
 	}
 	//aplicam sortarea pe baza vectorul cu numarari.
 	//num are urmatoarea regula: index reprezinta cate elemente sunt mai mici decat cele de pe pozitia i
+	//vector= {4,3,12,5} - dim-4
+	//num={1,0,3,2}
+	//temp={4,3,12,5}
+	//p1. i=0 vector[num[0]]=temp[0] -> vector[1]=4-> {4,4,12,5}
+	//p2. i=1 vector[num[1]]=temp[1] -> vector[0]=3 -> {3,4,12,5}
+	//p3. i=2 vector[num[2]]=temp[2] -> vector[3]=12 -> {3,4,12,12}
+	//p4. i=3 vector[num[3]]=temp[3] -> vector[2]=5 ->{3,4,5,12}
 	for (i = 0; i < dim; i++) {
 		vector[num[i]] = temp[i];
 	}
@@ -148,6 +157,10 @@ void sortare_met_bulelor(float* &vector, int dim) {
 	}
 }
 
+//vector = {4,3,12,5}
+//P1. i=0, p=0, j=1 -> vector[j(1)]<vector[p(0)] <-> 0,1 -> vector ={3,4,12,5}
+//P2. i=1, p=1, j=2 -> vector[j(2)]<vector[p(1)] ->false=> verific j=3 => <->1,1
+//P3. i=2, p=2, j=3 -> vector[j(3)]<vector[p(2)] -> true=> <-> 3,2 => vector{3,4,5,12}
 void sortare_selectie(float* &vector, int dim) {
 	//reprezinta indexul celui mai mic element din secventa
 	int p;
@@ -161,12 +174,17 @@ void sortare_selectie(float* &vector, int dim) {
 			}
 		}
 		//interschimbam cel mai mic element gasit dupa pozitia i cu cel din i
-		float aux = vector[p];
-		vector[p] = vector[i];
-		vector[i] = aux;
+		if (p != i) {
+			float aux = vector[p];
+			vector[p] = vector[i];
+			vector[i] = aux;
+		}
 	}
 }
-
+//vector={4,3,12,5}
+//p1 i=0; j=1 -> vector[i]>vector[j]=> <-> vector={3,4,12,5} -> modificare j=2
+//p2 i=1; j=2 -> 4>12-false=> j++(3) false => vector={3,4,12,5}
+//p3 i=2; j=3 -> 12>5 -true=> <-> 12,5=> vector={3,4,5,12}
 void sortare_interschimbare(float* &vector, int dim) {
 	float aux;
 	for (int i = 0; i < dim - 1; i++) {
