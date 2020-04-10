@@ -56,14 +56,20 @@ void afisare(int* vector, int dim) {
 */
 float* procesare_rucsac_completa(float capacitate_totala, float* capacitate_ocupata,
 	int nr_elemente){
+	//valoarea ptr fiecare element se afla in intervalul [0,1];
+	//initializare zona de memorie
 	float* rezultat = (float*)malloc(sizeof(float)*nr_elemente);
+	//tine minte cat mai trebuie sa ocupam din transport
 	float capacitate_ramasa = capacitate_totala;
 	for (int i = 0; i < nr_elemente && capacitate_ramasa>0; i++) {
 		if (capacitate_ramasa >= capacitate_ocupata[i]) {
+			//adaug toata capacitatea in transport
 			rezultat[i] = 1;
+			//scad ce am adaugat
 			capacitate_ramasa -= capacitate_ocupata[i];
 		}
 		else {
+			//fractiune din capacitatea_ocupata astfel incat sa transform capacitatea_ramasa= 0
 			rezultat[i] = capacitate_ramasa / capacitate_ocupata[i];
 			capacitate_ramasa = 0;
 			for (int j = i + 1; j < nr_elemente; j++) {
@@ -101,6 +107,7 @@ void sortare(float* &capacitati, float* &venituri, int nr) {
 	float aux;
 	for (int i = 0; i < nr - 1; i++) {
 		for (int j = i + 1; j < nr; j++) {
+			//comparam venitul unitar pozitia i respectiv j
 			if (venituri[i]/capacitati[i] < venituri[j]/capacitati[j]) {
 				aux = venituri[i];
 				venituri[i] = venituri[j];
@@ -174,10 +181,14 @@ void apel_problema_suma_maxima() {
 	3. Plata unei sume cu bacnota unitate
 */
 int* plata_unitate(int suma, int* tipuri_bacnote, int nr_tipuri) {
+	//stocam numarul fizic de bacnote utilizate din fiecare tip
+	//relatia este pozitia i in vector
 	int* rezultat = (int*)malloc(sizeof(int)*nr_tipuri);
 	int suma_ramasa = suma;
 	for (int i = 0; i < nr_tipuri; i++) {
+		//obtin cate bacnote de tip i utilizez pentru suma tinta
 		rezultat[i] = suma_ramasa / tipuri_bacnote[i];
+		//ce suma ramane de identificat pe i+1
 		suma_ramasa = suma_ramasa % tipuri_bacnote[i];
 	}
 	return rezultat;
@@ -209,6 +220,7 @@ void apel_problema_plata_unitate() {
 	float suma;
 	printf("\nSuma:");
 	scanf_s("%f", &suma);
+	//ordonare descrescatoare bacnote, astfel incat sa limitam cat de mult putem numarul fizic de bacnote utilizate
 	sortare_int(vector, nr);
 	afisare(vector, nr);
 	int* rezultat = plata_unitate(suma, vector, nr);
@@ -228,6 +240,12 @@ int verificare(int n, int k) {
 			d++;
 		}
 	}
+	/*if (d == k) {
+		return 1;
+	}
+	else {
+		return 0;
+	}*/
 	int r = (d == k) ? 1 : 0;
 	return r;
 }
@@ -246,8 +264,8 @@ void apel_problema_numar_natural() {
 }
 
 void main() {
-	apel_problema_rucsac();
-	apel_problema_suma_maxima();
-	apel_problema_plata_unitate();
+	//apel_problema_rucsac();
+	//apel_problema_suma_maxima();
+	//apel_problema_plata_unitate();
 	apel_problema_numar_natural();
 }
