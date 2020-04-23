@@ -2,7 +2,7 @@
 #include<stdlib.h>
 
 //============= functii comune ==============================
-//verifica daca valoarea elementului n este acceptabila 
+//verificare daca in vector pana la poziat curenta(n) nu exista valori egale
 int posibil(int* vector, int n) {
 	for (int i = 0; i < n; i++) {
 		if (vector[n] == vector[i]) {
@@ -175,9 +175,10 @@ void apel_combinari() {
 //4. Problema celor 8 (n) regine. Se cere să se așeze 8 regine pe o tablă de șah astfel încît să nu existe două
 //regine care să se atace.Trebuie găsite toate posibilitățile de așezare a celor 8 regine pe tabla de șah.
 int continua(int* solutie_partiala, int n) {
-	int p = 1;
 	for (int i = 1; i < n; i++) {
+		//prima conditie verifica daca 2 regine sunt pe aceeasi pozitie pe tabla de sah sau pe linie 
 		if (solutie_partiala[n] == solutie_partiala[i]
+			//a doua conditie verifica daca 2 regine sunt pe aceeasi linie sau coloana sau diagonala
 			|| abs(n - i) == abs(solutie_partiala[n] - solutie_partiala[i])) {
 			return 0;
 		}
@@ -264,5 +265,5 @@ void main() {
 	//apel_permutari();
 	//apel_aranjamente();
 	//apel_combinari();
-	//apel_regine();
+	apel_regine();
 }
