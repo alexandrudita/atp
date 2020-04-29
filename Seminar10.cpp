@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-
 //============================== METODE UTILITARE =========================================
 int* initializare_vector_vizitate(int nr_noduri) {
 	//vectorul are dimensiunea egala cu nr de noduri din graf
@@ -82,7 +81,7 @@ int** citire_tabelara_graf_ponderat(int& nr_v, int &nr_m) {
 		fscanf_s(fisier, "%d %d", &nr_v, &nr_m);
 		tabelara = (int**)malloc(sizeof(int*)*nr_m);
 		for (int i = 0; i < nr_m; i++) {
-			tabelara[i] = (int*)malloc(sizeof(int) * 2);
+			tabelara[i] = (int*)malloc(sizeof(int) * 3);
 		}
 		//parcurgem toate muchiile si citim nodul de inceput si final
 		for (int i = 0; i < nr_m; i++) {
@@ -312,7 +311,7 @@ int* parcurgere_df(int index_nod_inceput, int **matrice_adiacenta, int nr_noduri
 }
 
 void apel_parcurgere_bf() {
-	printf("\nCitire matrice adiacenta graf");
+	printf("\nCitire matrice adiacenta graf\n");
 	int nr_v = 0;
 	int** ma = citire_matrice_adiacenta_graf(nr_v);
 	afisare_matrice_consola(ma, nr_v, nr_v);
@@ -331,7 +330,7 @@ void apel_parcurgere_bf() {
 }
 
 void apel_parcurgere_df() {
-	printf("\nCitire matrice adiacenta graf");
+	printf("\nCitire matrice adiacenta graf\n");
 	int nr_v = 0;
 	int** ma = citire_matrice_adiacenta_graf(nr_v);
 	afisare_matrice_consola(ma, nr_v, nr_v);
