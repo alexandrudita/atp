@@ -232,7 +232,7 @@ int regine_recursiv(int n, int pas_curent, int* solutie_partiala, int nr) {
 		afisare_solutie_partiala(++nr, n, solutie_partiala);
 	}
 	else {
-		for (int j = 1; j < j <= n; j++) {
+		for (int j = 1; j <= n; j++) {
 			solutie_partiala[pas_curent] = j;
 			if (continua(solutie_partiala, pas_curent) == 1) {
 				nr = regine_recursiv(n, pas_curent + 1, solutie_partiala, nr);
